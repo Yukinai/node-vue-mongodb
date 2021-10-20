@@ -7,39 +7,30 @@ module.exports = app => {
     mergeParams: true
   })
 
+ 
 
-  //登陆校验中间件
-
-  app.use('/admin/api/rest/:resource', async (req, res, next) => {
-    const modelName = require('inflection').classify(req.params.resource)
-    req.Model = require(`../../models/${modelName}`)
-    next()
-  }, router)
-
-  const multer = require('multer')
-  const upload = multer({
-    dest: __dirname + '/../../uploads'
-  })
-  app.post('/admin/api/upload', upload.single('file'), async (req, res) => {
-    const file = req.file
-    file.url = `http://localhost:3000/uploads/${file.filename}`
-    res.send(file)
-  })  
+    
   //创建资源
   router.post('/', async (req, res) => {
     const model = await req.Model.create(req.body)
     res.send(model)
   })
-  //资源列表
-  router.get('/',async(req,res,next)=>{
-    const token= String(req.headers.authorization || '').split(' ').pop()
-      assert(token,401,'请先登陆')
-      const { id } =jwt.verify(token,app.get('secret'))
-      assert(id,401,'请先登陆')
-      req.user =await AdminUser.findById(id)
-      assert(req.user,401,'请先登陆')
-      await next();
-  } ,async (req, res) => {
+ //登陆校验中间件  
+const authMiddleware=require('../../middleware/auth')
+const resourceMiddleware= require('../../middleware/resource')
+ app.use('/admin/api/rest/:resource',authMiddleware(),resourceMiddleware(), router)
+ //上传资源
+const multer = require('multer')
+ const upload = multer({
+   dest: __dirname + '/../../uploads'
+ })
+ app.post('/admin/api/upload',authMiddleware(),upload.single('file'), async (req, res) => {
+   const file = req.file
+   file.url = `http://localhost:3000/uploads/${file.filename}`
+   res.send(file)
+ }) 
+    //资源列表
+  router.get('/',async (req, res) => {
     const queryOptions = {}
     if (req.Model.modelName) {
       if (req.Model.modelName === 'Category') {
