@@ -4,4 +4,5 @@ module.exports=app=>{
         useNewUrlParser:true
     })
     console.log("连接成功");
+    require('require-all')(__dirname+'/../models')
 }

@@ -37,13 +37,13 @@ const multer = require('multer')
         queryOptions.populate = 'parent'
       }
     }
-    const items = await req.Model.find().setOptions(queryOptions).limit(10)
+    const items = await req.Model.find().setOptions(queryOptions).limit(100)
     res.send(items)
   })
 
   //获取资源
   router.get('/:id', async (req, res) => {
-    const model = await req.Model.findById(req.params.id).limit(10)
+    const model = await req.Model.findById(req.params.id).limit(100)
     res.send(model)
   })
 

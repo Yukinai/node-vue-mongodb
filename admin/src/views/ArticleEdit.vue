@@ -40,13 +40,13 @@ export default {
     };
   },
   methods: {
-      async  handleImageAdded(file, Editor, cursorLocation, resetUploader) {
+    async handleImageAdded(file, Editor, cursorLocation, resetUploader) {
       const formData = new FormData();
       formData.append("file", file);
-     const res=await this.$http.post('upload',formData);
-     Editor.insertEmbed(cursorLocation,'image',res.data.url);
-     resetUploader();
-  },
+      const res = await this.$http.post("upload", formData);
+      Editor.insertEmbed(cursorLocation, "image", res.data.url);
+      resetUploader();
+    },
     async save() {
       let res;
       if (this.id) {
@@ -68,8 +68,12 @@ export default {
       const res = await this.$http.get(`rest/categories`);
       this.categories = res.data;
     },
+    async initdata(){
+      const res=await this.$http.get(``)
+    }
   },
   created() {
+    this.fetchCategories();
     this.id && this.fetch();
   },
 };

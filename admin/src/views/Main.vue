@@ -1,7 +1,7 @@
 <template>
   <el-container style="height: 100vh; ">
     <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-      <el-menu router :default-openeds="['1']" :unique-opened='true' :default-active="$route.path">
+      <el-menu router :unique-opened='true' :default-active="$route.path">
         <el-submenu index="1">
           <template slot="title">
             <i class="el-icon-message"></i>内容管理
@@ -69,7 +69,7 @@
       </el-header>
 
       <el-main>
-        <router-view></router-view>
+        <router-view :key="$route.path"></router-view>
         <!-- <el-table :data="tableData">
         <el-table-column prop="date" label="日期" width="140">
         </el-table-column>
